@@ -11,6 +11,7 @@ declare global {
 const Wallet: React.FC = () => {
   const [heading, setHeading] = useState("");
   const [loading, setLoading] = useState(false);
+  const [connected, setConnected] = useState(false);
   const [account, setAccount] = useState({ account: "", balance: 0})
   const askPermission = async () => {
     setLoading(true);
@@ -30,6 +31,7 @@ const Wallet: React.FC = () => {
           balance: +web3.utils.fromWei(balance)
         })
         setLoading(false);
+        setConnected(true);
       } catch(e) {
         // User denied access
         setHeading("MetaMask Denied Permission, Please Refresh and Try Again 🥺");
@@ -47,7 +49,7 @@ const Wallet: React.FC = () => {
       {!loading && <h1>{heading}</h1>}
       { loading
       ? <div className="loading-spinner"><div></div></div>
-      : <div className="wallet-btn" onClick={askPermission}>Connect to MetaMask</div>}
+      : !connected && <div className="wallet-btn" onClick={askPermission}>Connect to MetaMask</div>}
       { account.account && <div className="wallet-details">
         <div className="account-wrap">
           <label>Account: </label>
